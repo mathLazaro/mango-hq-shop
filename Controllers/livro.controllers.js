@@ -38,7 +38,7 @@ export const criarLivro = async (req, res) => {
       autor: req.body.autor,
       estoque: parseInt(req.body.estoque),
       valor: parseFloat(req.body.valor),
-      capa: req.file.path,
+      capa: "file" in req ? req.file.path : "",
     },
   });
 
@@ -85,16 +85,23 @@ export const getLivroPorId = async (req, res) => {
 };
 
 export const deletarLivro = async (req, res) => {
-  // busca livro por id e deleta
-  const livroDeletado = await prisma.livro.delete({
-    where: {
-      id: parseInt(req.params.livroId),
-    },
-  });
+  try {
+      // busca livro por id e deleta
+      const livroDeletado = await prisma.livro.delete({
+      where: {
+        id: parseInt(req.params.livroId),
+      },
+    });
 
-  // retorna mensagem de sucesso
-  res.json({
-    msg: "Livro deletado com sucesso!",
-  });
+    // retorna mensagem de sucesso
+    res.json({
+      msg: "Livro deletado com sucesso!",
+    });
+  } catch (error) {
+    res.status(404).json({
+      msg: "Livro não encontrado"
+    })
+  }
+  
 };
 
