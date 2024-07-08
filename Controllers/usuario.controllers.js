@@ -114,19 +114,25 @@ export const atualizarUsuario = async (req, res) => {
 };
 
 export const deletarUsuario = async (req, res) => {
-  // buscando usuário com o id e deletando perfil e usuário
-  const usuarioDeletado = await prisma.perfil.deleteMany({
-    where: {
-      Usuario: {
-        id: parseInt(req.params.usuarioId),
+  try {
+    // buscando usuário com o id e deletando perfil e usuário
+    const usuarioDeletado = await prisma.perfil.deleteMany({
+      where: {
+        Usuario: {
+          id: parseInt(req.params.usuarioId),
+        },
       },
-    },
-  });
-
-  // retornando mensagem de sucesso
-  res.json({
-    msg: "Usuário deletado com sucesso!",
-  });
+    });
+  
+    // retornando mensagem de sucesso
+    res.json({
+      msg: "Usuário deletado com sucesso!",
+    });
+  } catch (error) {
+    res.status(404).json({
+      msg: "Usuário não encontrado"
+    })
+  }
 };
 
 export const login = async (req, res) => {
