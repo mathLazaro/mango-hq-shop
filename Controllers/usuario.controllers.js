@@ -116,7 +116,7 @@ export const atualizarUsuario = async (req, res) => {
 export const deletarUsuario = async (req, res) => {
   try {
     // buscando usuário com o id e deletando perfil e usuário
-    const usuarioDeletado = await prisma.perfil.deleteMany({
+    const usuarioDeletado = await prisma.perfil.delete({
       where: {
         Usuario: {
           id: parseInt(req.params.usuarioId),
