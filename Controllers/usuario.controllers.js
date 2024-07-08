@@ -75,10 +75,13 @@ export const getUsuario = async (req, res) => {
 };
 
 export const getUsuarioPorId = async (req, res) => {
-  // buscando usuário com o id
+  // buscando usuário com o id e incluindo o perfil
   const usuario = await prisma.usuario.findUnique({
     where: {
       id: parseInt(req.params.usuarioId),
+    },
+    include: {
+      perfil: true, // Inclui o perfil do usuário
     },
   });
 
@@ -88,30 +91,39 @@ export const getUsuarioPorId = async (req, res) => {
     msg: "Usuário encontrado com sucesso!",
   });
 };
-
 export const atualizarUsuario = async (req, res) => {
-  // buscando usuário com o id e atualizando email e perfil
-  const usuario = await prisma.usuario.update({
-    where: {
-      id: parseInt(req.params.usuarioId),
-    },
-    data: {
-      email: req.body.email,
-      perfil: {
-        update: {
-          nome: req.body.nome,
-          telefone: req.body.telefone,
+  try {
+    // buscando usuário com o id e atualizando email e perfil
+    const usuario = await prisma.usuario.update({
+      where: {
+        id: parseInt(req.params.usuarioId),
+      },
+      data: {
+        email: req.body.email,
+        perfil: {
+          update: {
+            nome: req.body.nome,
+            telefone: req.body.telefone,
+          },
         },
       },
-    },
-  });
+      include: {
+        perfil: true, // Inclui o perfil atualizado na resposta
+      },
+    });
 
-  // retornando usuário e perfil atualizados
-  res.json({
-    data: usuario,
-    msg: "Usuário e perfil atualizados com sucesso!",
-  });
+    // retornando usuário e perfil atualizados
+    res.json({
+      data: usuario,
+      msg: "Usuário e perfil atualizados com sucesso!",
+    });
+  } catch (error) {
+    res.status(400).json({
+      msg: "Erro ao atualizar usuário.",
+    });
+  }
 };
+
 
 export const deletarUsuario = async (req, res) => {
   // buscando usuário com o id e deletando perfil e usuário
