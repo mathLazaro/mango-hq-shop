@@ -1,12 +1,21 @@
 FROM node:20.11-alpine
 
-WORKDIR /app
-COPY . .
+RUN apk update && apk add bash
 
 ARG APP_PORT
-ARG DATABASE_URL
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+COPY wait-for-it.sh /usr/src/app/wait-for-it.sh
+
+RUN npx prisma generate
 
 EXPOSE ${APP_PORT}
 
-RUN ["npm", "i"]
 CMD ["npm", "run", "start"]
