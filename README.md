@@ -118,6 +118,28 @@ npx prisma db push
 
 ~~~
 
+### Via Docker
+
+Para criar uma imagem docker da api é necessário ter instalado o `docker` e o `docker-compose`. Posteriormente é preciso ter o arquivo `.env` configurado conforme o arquivo `.env.docker.example`. E, por fim, execute a seguinte linha de comando a partir do diretório do projeto. Nesse método, não é necessária a criação de um banco de dados previamente e nem a instalação de dependências.
+
+~~~sh
+    sudo docker-compose build
+~~~
+
+Depois disso, basta executar o seguinte comando para subir a api no container:
+
+~~~sh
+    sudo docker-compose up
+~~~
+
+E o comando abaixo para parar desmontar a imagem:
+
+~~~sh
+    sudo docker-compose down
+~~~
+
+Caso queira subir o servidor via nodemon basta modificar o script que é iniciado ao montar a imagem no container no arquivo `compose.yaml` na propriedade `entrypoint` do serviço `api`.
+
 ## Uso do projeto
 
 Para utilizar o projeto existem alguns comandos que serão importantes
